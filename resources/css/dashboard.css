@@ -1,0 +1,52 @@
+:root{--bg:#0f1720;--card:#16161b;--muted:#9aa3b2;--accent:#6b46c1}
+body{font-family:Instrument Sans, system-ui, sans-serif;background:var(--bg);color:#e6eef6;margin:0}
+.app{display:flex;min-height:100vh}
+.sidebar{width:260px;background:#0b1116;padding:24px}
+.content{flex:1;padding:28px}
+.card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-bottom:20px}
+.card{background:linear-gradient(180deg,#1b1d22 0%, #17181c 100%);padding:18px;border-radius:14px;box-shadow:0 6px 18px rgba(3,6,10,0.4) inset}
+.pill-group{display:inline-flex;background:rgba(255,255,255,0.02);padding:4px;border-radius:999px}
+.pill{background:transparent;border:0;color:#cbd5e1;padding:6px 10px;border-radius:999px;cursor:pointer}
+.pill.active{background:#2b2f36;color:white;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.4)}
+.card .label{color:var(--muted);font-size:13px}
+.card .value{font-weight:600;font-size:20px;margin-top:6px}
+.controls{display:flex;gap:12px;align-items:center;justify-content:flex-end;margin-bottom:12px}
+.filters{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:#dbeafe}
+.chart-wrap{background:transparent;padding:12px;border-radius:10px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center}
+.modal{background:#0b1220;padding:18px;border-radius:10px;max-width:560px;width:94%}
+/* card larger look */
+.card{padding:20px;border-radius:12px}
+
+/* typography tweaks for cards */
+.card .label{font-size:13px;color:var(--muted);opacity:0.9}
+.card .value{font-weight:700;font-size:22px;color:#ffffff}
+
+/* Chart tooltip (HTML) */
+.chart-tooltip{
+	position: absolute;
+	background: linear-gradient(180deg, rgba(22,23,24,0.98), rgba(16,17,18,0.98));
+	color: #e6eef8;
+	border-radius: 10px;
+	padding: 10px;
+	box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+	font-size: 13px;
+	pointer-events: none;
+	z-index: 60;
+	width: auto;
+	max-width: 320px;
+}
+.chart-tooltip .tt-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
+.chart-tooltip .tt-title{ font-weight:700; font-size:13px; color:#f8fafc }
+.chart-tooltip .tt-date{ font-size:12px; color:#9aa3b2 }
+.chart-tooltip .tt-list{ list-style:none; padding:0; margin:0 }
+.chart-tooltip .tt-row{ display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom: 1px solid rgba(255,255,255,0.03) }
+.chart-tooltip .tt-row:last-child{ border-bottom: none }
+.chart-tooltip .tt-row .left{ display:flex; gap:8px; align-items:center }
+.chart-tooltip .dot{ width:8px; height:8px; border-radius:50%; display:inline-block }
+.chart-tooltip .label{ font-size:13px; color:#dbeafe; min-width:110px }
+.chart-tooltip .value{ color:#e6eef8; font-variant-numeric: tabular-nums; min-width:80px; text-align:right }
+.chart-tooltip .tt-net{ border-top:1px solid rgba(255,255,255,0.04); margin-top:8px; padding-top:8px; display:flex; justify-content:space-between; align-items:center }
+.chart-tooltip .net-label{ color:#9aa3b2; font-size:12px }
+.chart-tooltip .net-value{ font-weight:800; color:#fff; font-size:14px; font-variant-numeric: tabular-nums }
+@media (max-width:800px){.sidebar{display:none}.controls{justify-content:space-between}}
