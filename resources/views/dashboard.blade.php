@@ -78,33 +78,21 @@
                 </div>
 
                 <section class="bg-[#151521] rounded-2xl p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-semibold">Revenue</h2>
-                        <div class="flex items-center gap-4 text-sm text-gray-300">
-                            <span>MRR</span>
-                            <span class="text-gray-500">ARPU</span>
-                            <span class="ml-8">🗓 Jan 2, 2024</span>
-                            <span>Last 30 Days ▼</span>
-                        </div>
-                    </div>
+                    <div class="flex justify-between items-center mb-8">
+            <h2 class="text-lg font-semibold tracking-wide">Revenue</h2>
+            <div class="flex items-center text-sm text-gray-300">
+              <button class="px-3 py-1.5 bg-[#3B82F6] rounded text-white">MRR</button>
+              <button class="px-3 py-1.5 text-gray-500 bg-[#1C1C28] rounded">ARPU</button>
+              </div>
+              <div class="flex items-center gap-4 text-sm text-gray-300">
+              <span class="ml-10 text-gray-400">Jan 2, 2024</span>
+              <span class="text-gray-400">Last 30 Days ▼</span>
+            </div>
+          </div>
 
-                                <div class="flex items-center justify-between gap-4 mb-6">
-                                    <div class="flex items-center gap-3">
-                                        <div class="pill-group" role="tablist" aria-label="metric toggle">
-                                            <button id="btn-mrr" class="px-3 py-1 rounded-md bg-white/5 text-sm">MRR</button>
-                                            <button id="btn-arpu" class="px-3 py-1 rounded-md text-sm text-gray-400">ARPU</button>
-                                        </div>
-                                        <div id="currentRange" class="text-sm text-gray-400">Last 30 days</div>
-                                    </div>
-
-                                    <div class="flex items-center gap-3">
-                                        <input id="dateRange" placeholder="Last 30 Days" class="rounded-md bg-[#0b0f14] px-3 py-2 text-sm" />
-                                        <button id="openModal" class="rounded-md bg-[#1C1C28] px-3 py-2 text-sm">Filters</button>
-                                    </div>
-                                </div>
 
                     <!-- Metric Cards -->
-                    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+                    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-8">
                         <div class="bg-[#1C1C28] rounded-lg p-4">
                             <p class="text-gray-400 text-sm">Total MRR</p>
                             <h3 class="text-xl font-bold">${{ number_format($totals['total_mrr'], 0) }}</h3>
@@ -129,10 +117,18 @@
                             <p class="text-gray-400 text-sm">Reactivations</p>
                             <h3 class="text-xl font-bold">${{ number_format($totals['reactivations'], 0) }}</h3>
                         </div>
+                        <div class="bg-[#1C1C28] rounded-lg p-4">
+                            <p class="text-gray-400 text-sm">Existing</p>
+                            <h3 class="text-xl font-bold">${{ number_format($totals['existing'], 0) }}</h3>
+                        </div>
+                        <div class="bg-[#1C1C28] rounded-lg p-4">
+                            <p class="text-gray-400 text-sm">Churn</p>
+                            <h3 class="text-xl font-bold">${{ number_format($totals['churn'], 0) }}</h3>
+                        </div>
                     </div>
 
                     <!-- Legend -->
-                    <div class="flex flex-wrap gap-4 text-xs text-gray-400 mb-4">
+                    <div class="w-full flex flex-wrap justify-end gap-4 text-xs text-gray-400 mb-4">
                         <span class="flex items-center gap-1"><span class="w-2 h-2 bg-red-400 rounded-full"></span> Total MRR</span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-400 rounded-full"></span> New MRP</span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 bg-green-400 rounded-full"></span> Reactivations</span>
@@ -150,53 +146,54 @@
             </main>
         </div>
 
-        {{-- Modal markup for filters (kept from previous) --}}
-        <div id="modalBackdrop" style="display:none;" class="fixed inset-0 bg-black/60 flex items-center justify-center">
-            <div class="bg-[#0b1220] p-6 rounded-lg max-w-xl w-11/12">
-                <h3 class="text-lg font-semibold text-white mb-2">Filters</h3>
-                <div class="flex gap-4">
-                    <label class="flex-1 text-sm text-gray-400">Country
-                        <input id="filter-country" class="mt-2 w-full rounded-md bg-[#071018] p-2 text-white border border-white/5" />
-                    </label>
-                    <label class="w-32 text-sm text-gray-400">Plan
-                        <select id="filter-plan" class="mt-2 w-full rounded-md bg-[#071018] p-2 text-white border border-white/5"><option>All</option><option>Pro</option></select>
-                    </label>
-                </div>
-                <div class="mt-4 flex justify-end gap-3">
-                    <button id="closeModal" class="px-3 py-2 rounded-md border border-white/10 text-gray-300">Close</button>
-                    <button id="applyFilters" class="px-3 py-2 rounded-md bg-blue-600">Apply</button>
-                </div>
-            </div>
-        </div>
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Wait for DOM content
+            document.addEventListener('DOMContentLoaded', function () {
+                const ctx = document.getElementById('mrrChart').getContext('2d');
 
-        <!-- Scripts: keep the original Vite check and fallback to CDNs -->
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-                @vite(['resources/css/dashboard.css','resources/js/dashboard.js'])
-        @else
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-                <script>
-                        fetch('/api/dashboard/mock')
-                                .then(r => r.json())
-                                .then(payload => {
-                                        const { labels, new: _new, upgrades, reactivations, existing, downgrades, churn } = payload;
-                                        const series = { new: _new, upgrades, reactivations, existing, downgrades, churn };
-                                        const ctx = document.getElementById('mrrChart').getContext('2d');
-                                        new Chart(ctx, { type: 'bar', data: { labels, datasets: [
-                                                { label: 'Existing', data: series.existing, backgroundColor: '#3b82f6' },
-                                                { label: 'New MRR', data: series.new, backgroundColor: '#ef4444' },
-                                                { label: 'Upgrades', data: series.upgrades, backgroundColor: '#10b981' },
-                                                { label: 'Reactivations', data: series.reactivations, backgroundColor: '#8b5cf6' },
-                                                { label: 'Downgrades', data: series.downgrades, backgroundColor: '#94a3b8' },
-                                                { label: 'Churn', data: series.churn, backgroundColor: '#f97316' }
-                                        ] }, options: { responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true},y:{stacked:true}} } });
+                // Sample labels (could be replaced by server-side data)
+                const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
 
-                                        flatpickr('#dateRange', { mode: 'range' });
-                                        // wire modal
-                                        document.getElementById('openModal')?.addEventListener('click', ()=> document.getElementById('modalBackdrop').style.display='flex');
-                                        document.getElementById('closeModal')?.addEventListener('click', ()=> document.getElementById('modalBackdrop').style.display='none');
-                                });
-                </script>
-        @endif
+                const data = {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Total MRR', data: [12000,15000,18000,20000,22000,25000,27000], backgroundColor: '#F87171' },
+                        { label: 'New MRR', data: [3000,4000,3500,4200,4800,5000,5200], backgroundColor: '#3B82F6' },
+                        { label: 'Reactivations', data: [2000,2500,2400,3000,3100,3200,3300], backgroundColor: '#34D399' },
+                        { label: 'Upgrades', data: [1000,1200,1300,1400,1500,1600,1800], backgroundColor: '#A7F3D0' },
+                        { label: 'Existing', data: [5000,6000,6200,6300,6400,6600,6800], backgroundColor: '#818CF8' },
+                        { label: 'Downgrades', data: [500,600,550,580,600,620,640], backgroundColor: '#C084FC' },
+                        { label: 'Churn', data: [200,300,250,270,280,290,300], backgroundColor: '#F472B6' }
+                    ]
+                };
+
+                const config = {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        scales: {
+                            x: { stacked: true, ticks: { color: '#A0A0B2' }, grid: { color: 'rgba(255,255,255,0.03)' } },
+                            y: { stacked: true, ticks: { color: '#A0A0B2' }, grid: { color: 'rgba(255,255,255,0.03)' } }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { mode: 'index', intersect: false, displayColors: true }
+                        }
+                    }
+                };
+
+                // Destroy existing chart instance on reloads (hot reloads in dev)
+                if (window._mrrChart instanceof Chart) {
+                    window._mrrChart.destroy();
+                }
+
+                window._mrrChart = new Chart(ctx, config);
+            });
+        </script>
     </body>
 </html>
